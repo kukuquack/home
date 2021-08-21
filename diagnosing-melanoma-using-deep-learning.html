@@ -1,0 +1,121 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnosing Melanoma (Skin Cancer) Using Deep Learning</title>
+    <style>
+        #title {
+            text-align: center;
+            font-size: 64px;
+        }
+        body {
+            font-family: Calibri;
+        }
+        #text {
+            font-size: 200%;
+            width: 95%;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .sub {
+            font-size: 40px; 
+            text-align:left;
+        }
+    </style>
+</head>
+<body>
+    <h1><a href="https://kukuquack.github.io/home/" style="text-decoration: none; color: black;">Omar Zayed | Deep Learning</a></h1>
+    <h1 id="title">Diagnosing Melanoma (Skin Cancer) Using Deep Learning</h1>
+    <div style="text-align: center;">
+        <img src="p1_1.png" style="width:65%;">
+    </div>
+    <div id="text">
+        <p>Hey guys! I've been busy lately interested in diagnosing medical images in deep learning, so I spent a few hours building this: A deep learning model that diagnoses Melanoma. This model performs quite good: around 94% accuracy.I've used pytorch as the main library. The code for this project is on a Jovian notebook, which you can visit <a href="https://jovian.ai/kukuquack/course-project">here</a>.</p>
+        <h1 class="sub">Downloading the Dataset</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=7&hideOutput=true" title="Jovian Viewer" height="148" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Using the opendatasets library, we download the dataset from kaggle. The opendatasets library is very useful as it downloads the data and decompresses the file.</p>
+        <h1 class="sub">Importing the necessary libraries</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=9" title="Jovian Viewer" height="408" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Pytorch is the main library for the project, though there are other helpful libraries that we used like matplotlib for plotting graphs.</p>
+        <h1 class="sub">Applying Transformations To The Dataset</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=10" title="Jovian Viewer" height="228" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Applying transformations is an absolute must! Pytorch can't just use normal image files, it uses tensors which are like matrices that it uses to make its operations. We also need to set the images to the same size and normalize the data to improve the efficiency, as normalization puts the numbers into a small range.</p>
+        <p>We also define a batch size, we divide the data into batches so that it can fit on the GPU's memory as we can't fit all the data on the GPU at once! Even if we could, the training process will be very slow.</p>
+        <h1 class="sub">Loading The Data</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=15&hideOutput=true" title="Jovian Viewer" height="205" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Here we load the data from our computer. <span style="font-family: monospace; background-color: rgb(228, 228, 228);">train_dir, val_dir, test_dir</span> is where our data is located. Our data is divided already for us, so we don't need to do it ourselves.</p>
+        <h1 class="sub">Viewing The Images</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=17&hideOutput=true" title="Jovian Viewer" height="325" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Here we define some useful functions that will help us view the images. <span style="font-family: monospace; background-color: rgb(228, 228, 228);">denormalize()</span> takes the image and converts it back to its normal RGB state, as normalizing the images has changed the values. <span style="font-family: monospace; background-color: rgb(228, 228, 228);">show_batch()</span> however, takes a batch of images and shows them as a grid.</p>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=19" title="Jovian Viewer" height="269" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Here we can see a batch of images from the training dataset. As we can see, there are 15 images, the batch size we defined.</p>
+        <h1 class="sub">Using A GPU</h1>
+        <p>If we have a GPU (a graphics card) that is cuda-enabled, we can use it as its computation is quicker than CPUs. That's why people generally use GPUs in deep learning.</p>
+        <p>To use the GPU (if one exists), we need to define functions that will transfer all the data and our model (which we will soon define) to it.</p>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=22&hideOutput=true" title="Jovian Viewer" height="608" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p><span style="font-family: monospace; background-color: rgb(228, 228, 228);">get_default_device()</span> returns the object for the device that is available. If a GPU is available, it'll return an object for it, if not, then it will return an object for the cpu. We will use that object to transfer the data to the device it represents and do the computation on it.</p>
+        <p><span style="font-family: monospace; background-color: rgb(228, 228, 228);">to_device()</span> is the function that moves the tensors to the device we give it.</p>
+        <p><span style="font-family: monospace; background-color: rgb(228, 228, 228);">DeviceDataLoader</span> class wraps a dataloader to move the data to the device.</p>
+        <h1 class="sub">Setting the Device/Hardware For The Computation</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=24" title="Jovian Viewer" height="138" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Here we see that we have a GPU. We store this object in a variable so that we can transfer our data and model to it.</p>
+        <h1 class="sub">Defining Functions For Accuracy/Statistics</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=25&hideOutput=true" title="Jovian Viewer" height="645" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>These functions help use during the training step/validation step. These functions return the statistics during the development of the model.</p>
+        <h1 class="sub">The Fun Part: Defining Our Model</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=27&hideOutput=true" title="Jovian Viewer" height="305" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Here we define our model. We decided to use a ResNet50 but any model should do as long as it suits the data we have. You can try different model architectures and see how that impacts the performance. We use the <span style="font-family: monospace; background-color: rgb(228, 228, 228);">to_device()</span>  function to put the model on the GPU. You should also note that we can't put the data on the CPU and the model on the GPU, it should be on either one of them.</p>
+        <h1 class="sub">Model Architecture</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=29" title="Jovian Viewer" height="800" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Here we see how the model is structured.</p>
+        <h1 class="sub">Transferring the Data to the GPU</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=31&hideOutput=true" title="Jovian Viewer" height="88" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <br>
+        <br>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=32&hideOutput=true" title="Jovian Viewer" height="88" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <br>
+        <br>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=33&hideOutput=true" title="Jovian Viewer" height="88" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Let's now move the data to the GPU using the <span style="font-family: monospace; background-color: rgb(228, 228, 228);">DeviceDataLoader</span> class.</p>
+        <h1 class="sub">Defining the fit function</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=35&hideOutput=true" title="Jovian Viewer" height="800" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>The fit function is what fits our model to the data we have. Rather than using a regular fit function, here we add some improvments, like Learning Rate Scheduling, weight decay and gradient clipping. You will find blog posts on these soon!</p>
+        <p>Also we add the <span style="font-family: monospace; background-color: rgb(228, 228, 228);">@torch.no_grad()</span> decorator over the evaluate function, as we don't need to compute gradients during evaluation.</p>
+        <h1 class="sub">Testing The Model Before Fitting</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=37" title="Jovian Viewer" height="294" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Here we test the model on the training set before fitting. We can see that the model performs badly which is obvious as it hasn't been trained on the data. We get around 50% accuracy, which is what we should expect as all guesses are random and this is a binary classification problem.</p>
+        <h1 class="sub">Setting Parameters For The fit_one_cycle Function</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=39&hideOutput=true" title="Jovian Viewer" height="168" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>These are the parameters that we will use to fit the model to the data.</p>
+        <h1 class="sub">Fitting the Model</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=42&hideOutput=true" title="Jovian Viewer" height="88" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <br>
+        <br>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=43" title="Jovian Viewer" height="800" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>At last! The model took around 35 minutes to train, though it looks like we got good results! Around 94% Accuracy in 15 epochs!</p>
+        <h1 class="sub">Evaluating the model on the test dataset</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=45" title="Jovian Viewer" height="118" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>Testing on the test dataset got us similar results, over 93% in accuracy.</p>
+        <h1 class="sub">Plotting the loss vs epoch</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=51&hideOutput=true" title="Jovian Viewer" height="248" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <br>
+        <br>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=52" title="Jovian Viewer" height="367" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>We defined a function called <span style="font-family: monospace; background-color: rgb(228, 228, 228);">plot_losses()</span> that takes the <span style="font-family: monospace; background-color: rgb(228, 228, 228);">history</span> variable and plots the loss vs the number of epochs and as we can see, it is evident that the loss decrease by time in both the training set and the validation set.</p>
+        <h1 class="sub">Testing on single images</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=54&hideOutput=true" title="Jovian Viewer" height="248" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>This function allows us to predict using the model if skin has melanoma or not.</p>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=55" title="Jovian Viewer" height="430" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>As we can see, the label of this image is "Melanoma", and the predicted label is "Melanoma" too. Pretty Cool!</p>
+        <p>Let's try another one for "NotMelanoma".</p>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=57" title="Jovian Viewer" height="430" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <h1 class="sub">Saving Our Model</h1>
+        <iframe src="https://jovian.ai/embed?url=https://jovian.ai/kukuquack/course-project/v/48&cellId=60&hideOutput=true" title="Jovian Viewer" height="88" width="100%" style="margin 0 auto; max-width: 800px;" frameborder="0" scrolling="auto"></iframe>
+        <p>After all this work, we should save our model so that we can use it or improve it later.</p>
+        <h1 class="sub">Conclusion</h1>
+        <p>So, that's it! We were able to make a model that can diagnose melanoma which gained an accuracy of 94%! While doctors need to make tests on the tissue sample, all we do is take a picture and give it to the model. I hope you enjoyed this walk-through of my project. Don't forget to follow me on <a href="https://www.linkedin.com/in/omar-zayed-0152131a9/">Linkedin</a> and <a href="https://github.com/kukuquack">github</a>.</p>
+    </div>
+</body>
+</html>
