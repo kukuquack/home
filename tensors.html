@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pytorch Tutorial: 1</title>
+    <style>
+        #title {
+            text-align: center;
+            font-size: 64px;
+        }
+        body {
+            font-family: Calibri;
+        }
+        #text {
+            font-size: 200%;
+            width: 95%;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .sub {
+            font-size: 40px; 
+            text-align:left;
+        }
+    </style>
+</head>
+<body>
+    <h1><a href="https://kukuquack.github.io/home/" style="text-decoration: none; color: black;">Omar Zayed | Deep Learning</a></h1>
+    <h1 id="title">Lesson 1 Pytorch: Tensors</h1>
+    <em><p style="text-align: center;">25 Aug, 2021</p></em>
+    <div id="text">
+        <p>Tensors: they are multi-dimensional matrices containing elements of the same data type. It can also consist of one number. Pretty straight forward. What makes these tensors powerful is that they are insanely fast in computation. They also have a bunch of cool features that are helpful -if not necessary- when solving any machine learning/deep learning problem.</p>
+        <h1 class="sub">Creating a tensor:</h1>
+        <p>Now, there are many ways you can create a tensor:</p>
+        <b><p>1- Creating a tensor from a python list or sequence (numpy arrays for example.)</p></b>
+        <img src="p2_1.PNG">
+        <p>Here we convert a python list to a pytorch tensor.</p>
+        <img src="p2_2.PNG">
+        <b><p>2- Creating a tensor with specific values</p></b>
+        <img src="p2_3.png">
+        <p><code>torch.zeros()</code> creates a tensor filled with zeros with the dimensions given, while <code>torch.ones()</code> creates a tensor filled with ones with the given dimensions.</p>
+        <b><p>3- Creating tensors with random values</p></b>
+        <img src="p2_4.png">
+        <p>Note: There are many other ways to create tensors, but these might be the most ones you'll find yourself using.</p>
+        <h1 class="sub">Operations that can be done on tensors:</h1>
+        <p>Number of elements in the tensor:</p>
+        <img src="p2_6.png">
+        <p>Transposing a tensor:</p>
+        <img src="p2_7.PNG">
+        <p>Here, 0 and 1 are the dimensions that we want to swap.</p>
+        <p style="color: red;">Something worth noting here is that a tensor transposed using <code>torch.transpose()</code> shares the same underlying storage as with the input tensor, so changing the contents of one of these tensors will happen also on the other tensor.</p>
+        <p>Adding a dimension in a tensor:</p>
+        <img src="p2_8.PNG">
+        <p>The number we enter with the tensor is the place where we want the new dimension to be. A value between<br><code>[-input_tensor_dimension_count - 1, input_tensor_dimension_count + 1]</code> can be used.</p>
+        <br>
+        <br>
+        <p>These are some of the functions that you might see often, though there are plenty of others. You don't need to memorize them all, you can look them up in the documentation when you see one that you don't know or remember.</p>
+        <h1 class="sub">Indexing in tensors:</h1>
+        <p>Python's indexing and slicing notation can be used on tensors too!</p>
+        <img src="p2_5.png">
+        <h1 class="sub">Data types in tensors</h1>
+        <p>Each tensor has one type. There are a lot of data types that can be used, <a href="https://pytorch.org/docs/stable/tensor_attributes.html#torch-dtype">here</a> you can find them all. Make sure you use the one that can fit in your memory.</p>
+        <img src="p2_9.png">
+        <p>Here we wanted a randomly set tensor with 64-bit floating point elements.</p>
+        <h1 class="sub">Conclusion</h1>
+        <p>So that's it! We are now able to create tensors with the desired data type and perform operations on them. These tensors are essential in pytorch, as the data we import must be converted into tensors. See you next time!</p>
+    </div>
+</body>
+</html>
