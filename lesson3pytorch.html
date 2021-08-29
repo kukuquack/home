@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" sizes="180x180" href="android-chrome-512x512.png">
 
-    <title>Importing Data: Pytorch Lesson 3</title>
+    <title>Building the Model: Pytorch Lesson 4</title>
     <style>
         #title {
             text-align: center;
@@ -29,34 +29,48 @@
 </head>
 <body>
     <h1><a href="https://kukuquack.github.io/home/" style="text-decoration: none; color: black;">Omar Zayed | Deep Learning</a></h1>
-    <h1 id="title">Importing Data: Pytorch Lesson 3</h1>
-    <em><p style="text-align: center;">28 Aug, 2021</p></em>
-    <em><p style="text-align: center;"></p></em>
+    <h1 id="title">Building the Model: Pytorch Lesson 4</h1>
+    <em><p style="text-align: center;">29 Aug, 2021</p></em>
     <div id="text">
-        <p>Data is the most important thing when making a machine learning/deep learning model, because how are we supposed to learn? We use the data that we are provided in a task to train and evaluate the model. Data can be found all over the internet. You can get data by scraping websites, finding datasets on websites like <a href="https://www.kaggle.com">kaggle</a>, which is the most famous website that provides data and hosts machine learning competitions. You can also be provided data as a spreadsheet, though you might have to do some cleaning using tools provided by 3rd party libraries in python. Although data is everywhere, it doesn't mean that all of it is beneficial. Some data maybe unlabeled, and in this case it'd be useless (except if you have days to label it yourself of course 😛).</p>
-        <h1 class="sub">Data In Pytorch</h1>
-        <p>In Pytorch, we can either import data from our system (if already downloaded), or we can import standard data sets that is provided by Pytorch. These include the famous <a href="https://pytorch.org/vision/stable/datasets.html#mnist">MNIST</a> data set which is used for handwritten digit recognition.</p>
-        <h1 class="sub">Importing MNIST</h1>
-        <img src="p4_1.PNG">
-        <p>First, we import MNIST from <code>torchvision.datasets</code>. You can find a lot of data sets there, though our focus now is on MNIST. Then we call an instance of <code>MNIST</code>. We set where we want our data to be saved by setting <code>root='data/'</code>. We set <code>download</code> to <code>True</code> so that we can download the data set. We also set <code>transform</code> to <code>ToTensor()</code> which will transform the image data to tensors, which we talked about in the first lesson which you can visit <a href="https://kukuquack.github.io/home/lesson1pytorch.html">here</a>. Data in Pytorch needs to be converted into tensors as it is what Pytorch uses. You can't use normal image files. There are also other types of transformations that can be applied (they can be joined together too).</p>
-        <img src="p4_2.PNG">
-        <p>After we have imported the data, we need to divide it into 2, the training set and the validation set. Here the validation set is of size 10000 and the training set is 60000. This is the data set (not including the test set) is comprised of 60000 images.</p>
-        <img src="p4_3.png">
-        <p>Here we put our data in <code>DataLoaders</code>. They are iterables that divide our data into batches when you iterate over them. We have batches so that the memory can fit in memory, as we can't fit all these images all at once! We have the batch size in the validation set double the batch size in the training set. This is because we don't need to do any learning which takes up memory.<code> shuffle=True</code> allows us to have differently generated batches each epoch. This shuffling allows the model to generalized quicker. The validation loader doesn't need to be shuffled as it is only used for validation.</p>
-        <img src="p4_4.png">
-        <p>Now we import the training data and make a <code>DataLoader</code> out of it. The <code>MNIST</code> class has train set to <code>False</code>, meaning we want the other part of the data that has been put aside for testing.</p>
-        <h1 class="sub">Importing Tabular Data</h1>
-        <p>To import tabular data and make a model for it in Pytorch, you can first import the data and load it using numpy, then you can change the numpy array into a tensor using the <code>torch.from_numpy()</code> function. Then put the inputs and targets in a <code>TensorDataset</code>. Then you split the data set into a training and test set using <code>random_split()</code>, then create a <code>DataLoader</code> for each partition.</p>
-        <img src="p4_5.png">
-        <h1 class="sub">Importing Image Data</h1>
-        <img src="p4_6.png">
-        <p>There are many folder structures when downloading image data on the internet. This one can be seen quite often. If your data set is divided into a training set and test set, and each class has its own folder, then you can import the data as follows:</p>
-        <img src="p4_7.png">
-        <p>We create an <code>ImageFolder</code> with the folder of the training data and apply a <code>ToTensor()</code> transformation, then we split the data into a training set and a validation set using <code>random_split()</code>. We then set the <code>batch_size</code> to some number, then we create a <code>DataLoader</code> for each partition.</p>
-        <img src="p4_8.png">
-        <p>We create an <code>ImageFolder</code> for the test folder, and apply the same transformation, then we create a <code>DataLoader</code>.</p>
+        <p>Let's make the model. There are many machine learning models out there, but this course is focused on deep learning models. First we'll start by creating our own deep neural network architecture, then we'll use ones already defined for us in the pytorch library. Please note that this course is mainly on computer vision using Pytorch and deep learning.</p>
+        <h1 class="sub">Custom Architecture</h1>
+        <img src="p5_1.PNG">
+        <p>Here, we define a <code>class</code> called <code>CustomModel</code>, which has a network defined, though its empty.</p>
+        <p>There are many types of layers that can be added to our network, let's talk about a few:</p>
+        <h1 class="sub">Convolutions</h1>
+        <img src="https://miro.medium.com/max/535/1*Zx-ZMLKab7VOCQTxdZ1OAw.gif">
+        <p>How it works: you have a kernel that has weights, and this kernel slides over the input, performing elementwise multiplication with the numbers below it, then summing all that up producing an output pixel. What we get is another 2d output, though it may differ in size. Parameters that control the size of the output are the size of the kernel, the stride (how much the kernel travels over the image) and if there is any padding.</p>
+        <img src="https://miro.medium.com/max/395/1*1okwhewf5KCtIPaFib4XaA.gif">
+        <p>Sometimes padding is useful when applying a convolution, as it can help make our output in the desired dimensions ex: the same size as the input. Applying more than one filter can increase the number of channels. Originally, there are 3 channels for RGB, but that can change during the processing of the image.</p>
+        <p>So, what's its use? Convolutional layers act like filters, they help extract information from images. There are many types of predefined convolutions you can find, for example line detection.</p>
+        <p>An <code>nn.Sequential</code> model with one convoluional layer:</p>
+        <img src="p5_2.PNG">
+        <p>There is also <code>Conv1d</code> and <code>Conv3d</code>, but for images we'll use <code>Conv2d</code>.</p>
+        <p>After a Convolutional layer, generally there is a ReLU activation function.</p>
+        <h1 class="sub">ReLU</h1>
+        <img src="https://pytorch.org/docs/stable/_images/ReLU.png">
+        <p>ReLU is an activation function. It introduces non-linearity in our model. Simple linear regression is used when you can draw a line through the data. Some data, however, is not linear and needs to have non-linear activation functions. ReLU takes the input numbers, if a number is bigger than 0, than it is kept as is, and if the number is 0 or less than 0, then it is replaced with 0.</p>
+        <img src="p5_4.PNG">
+        <p>Here we have a ReLU function-only model.</p>
+        <p>And after ReLU, generally there is a max-pooling layer.</p>
+        <h1 class="sub">Max-Pooling</h1>
+        <img src="https://computersciencewiki.org/images/8/8a/MaxpoolSample2.png">
+        <p>These are used to decrease input size. Here we have a 4x4 input and we apply a 2x2 max-pool layer with a stride of 2 so that regions won't overlap. For each region, we take the maximum value and make a new matrix as represented by the output in the image.</p>
+        <img src="p5_3.PNG">
+        <p>Here we have a model that applies a 2x2 max-pool layer.</p>
+        <h1 class="sub">Repeating the Layers</h1>
+        <p>This sequence: Conv, ReLU, Max-pool, is often repeated. After repeating, we flatten the layers, then we apply a linear layer on the incoming input, and apply ReLU. We then do the last 2 steps as much as we want till we have our data transformed to our desired output.</p>
+        <img src="p5_5.PNG">
+        <p>Here our output is 10 values.</p>
+        <p>Note: you can and should vary this architecture according to your needs. Heck, you could even come up with your own architecture! Though make sure that it doesn't lose the essence of deep learning.</p>
+        <p>After stacking the appropriate layers, you have your own custom model. Though we might not know how to create a good architecture, so Pytorch has a cool feature that allows us to use predefined models.</p>
+        <h1 class="sub">Predefined Models</h1>
+        <p>Predefined models in Pytorch are architectures that we can use without creating our own. Examples include <a href="https://arxiv.org/abs/1512.03385">ResNets</a> and <a href="https://arxiv.org/abs/1404.5997">AlexNet</a>.</p>
+        <img src="p5_6.PNG">
+        <p>Here we use a ResNet50 model from <code>torchvision.models</code>. We replace the last layer because it is designed for classifying 10 image classes and set the output to be for 7 classes.</p>
+        <p>Predefined architectures have cool concepts which they introduce to computer vision, like ResNets. I advise you to read on the difference between a normal CNN and a ResNet/some other architecture and what makes a ResNet better.</p>
         <h1 class="sub">Conclusion</h1>
-        <p>So we were able to import data from our computer using Pytorch. In the next lessons we will use this data to train a model on it. See you next lesson!</p>
+        <p>So now that we have defined how the architecture looks like, it's time to start training.</p>
     </div>
 </body>
 </html>
