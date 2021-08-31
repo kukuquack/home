@@ -1,0 +1,72 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" sizes="180x180" href="android-chrome-512x512.png">
+
+    <title>Training The Model: Pytorch Lesson 5</title>
+    <style>
+        #title {
+            text-align: center;
+            font-size: 64px;
+        }
+        body {
+            font-family: Calibri;
+        }
+        #text {
+            font-size: 200%;
+            width: 95%;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .sub {
+            font-size: 40px; 
+            text-align:left;
+        }
+    </style>
+</head>
+<body>
+    <h1><a href="https://kukuquack.github.io/home/" style="text-decoration: none; color: black;">Omar Zayed | Deep Learning</a></h1>
+    <h1 id="title">Training The Model: Pytorch Lesson 5</h1>
+    <em><p style="text-align: center;">31 Aug, 2021</p></em>
+    <em><p style="text-align: center;"></p></em>
+    <div id="text">
+        <p>Now, let's start training. We need to define a training loop. This loop should decrease the loss by changing the weight.</p>
+        <h1 class="sub">Training A Classification Model</h1>
+        <p>To do what we stated above, first we'll go through the training process.</p>
+        <h1 class="sub">The Loss Function</h1>
+        <p>The loss function is what we use to evaluate how well a model performs. What results from our loss function is what we use next to calculate the gradient so that we can do gradient descent.</p>
+        <p>There are many different loss functions out there, but each one serves a different purpose. For example, there is one for regression, and one for multi-class classification, and one for binary classification etc. Let's talk about some here.</p>
+        <h1 class="sub">MSE</h1>
+        <p>Mean squared error is used in regression. We calculate the difference between the predicted value and the target and square it. We do this for the rest of the data/batch then take the average. A question I get quite frequently is: "Why not just take the difference and average it?". The answer to this question is: if we overestimate a lot and underestimate a lot, then our loss would be very small, which is obviously wrong as it should be very high, so squaring makes the loss always positive. Also, we don't take the absolute error because we can't use gradient descent with it. It is not differentiable.</p>
+        <img src="p3_1.png">
+        <p>Here, our loss is quadratic. If you know calculus, you'll know that the gradient gives us the rate of change of the loss. We have the gradient of the loss with respect to the weight.</p>
+        <p>To calculate which direction to go: If the gradient is positive, we decrease the weight's value, and if the gradient is negative, we increase the weight's value. This way we head to a lower loss.</p>
+        <img src="p6_2.PNG">
+        <p>Here we import the MSE loss function that comes with Pytorch. We can now call <code>loss(inputs, targets)</code> to calculate the loss.</p>
+        <h1 class="sub">Cross-Entropy Loss</h1>
+        <p>This loss function is used in classification. There is also Binary Cross-Entropy which is used for binary classification, though normal Cross-Entropy can be used too.</p>
+        <p>How it works is that it takes the probability of the actual target predicted by the model, then takes the logarithm of it. If the probability is high, then it is a very small negative number, but if it is small, then it is a big negative number. We then multiply the number by -1 to get positive values. This means that if the probability is high, then the loss is low, and vice versa.</p>
+        <img src="https://www.intmath.com/blog/wp-content/images/2019/05/log10.png" style="width: 400px">
+        <p>If a model does not output probabilities, we apply softmax which can convert the numbers into probabilities that sum up to 1. This function is already implemented in the Cross-Entropy function in Pytorch.</p>
+        <img src="https://i.imgur.com/EAh9jLN.png">
+        <p>Importing Cross-Entropy loss function from the Pytorch library. We can now call <code>loss(inputs, targets)</code> to use the function to calculate the loss:</p>
+        <img src="p6_3.PNG">
+        <h1 class="sub">Optimizers</h1>
+        <p>There are a lot of optimizers with really fancy features, but right now we'll stick to SGD (Stochastic Gradient Descent) which update the parameters of the model with a partition (batches) of the data at a time unlike gradient descent which uses all the data at once.</p>
+        <p>To use the SGD optimizer from Pytorch:</p>
+        <img src="p6_4.PNG">
+        <p>We give it in our model's parameters as they are the values that we want to optimize. We also give it a learning rate. The learning rate is the step size that we take when updating our weights. Too high a value can cause our model to reach suboptimal weigths quickly, and too small a value will cause the training to take forever. How it works is: the learning rate is multiplied by the gradient, then we subtract that from the corresponding weight. The value we pick for the learning rate requires some testing, but you could try to set it between 0.01 and 0.0001.</p>
+        <h1 class="sub">Training Loop</h1>
+        <img src="p6_5.PNG">
+        <p>Here is our training loop. First, we need to set the number of epochs. This is the number of passes we'll do through our data. Under that for loop, we have another for loop that passes through the training data. Each loop gives us one batch. Now we have the inputs and the targets, we make our predictions on the input using <code>model(inputs)</code>, then calculate the loss using <code>loss(model_outputs, targets)</code>, then calculate the gradients using the <code>.backward()</code> method, and let the optimizer optimize the parameters (<code>optimizer.step()</code>).</p>
+        <p>Before each loop, we set the gradients to 0 (<code>optimizer.zero_grad()</code>), which we need to explicitly do in Pytorch so the gradients don't accumulate.</p>
+        <p>We'll now make a function that puts all this together:</p>
+        <img src="p6_6.PNG">
+        <h1 class="sub">Conclusion</h1>
+        <p>So now that we have trained our model, it's time to evaluate it. See you next lesson!</p>
+    </div>
+</body>
+</html>
