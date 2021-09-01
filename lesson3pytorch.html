@@ -37,7 +37,7 @@
         <h1 class="sub">Data In Pytorch</h1>
         <p>In Pytorch, we can either import data from our system (if already downloaded), or we can import standard data sets that is provided by Pytorch. These include the famous <a href="https://pytorch.org/vision/stable/datasets.html#mnist">MNIST</a> data set which is used for handwritten digit recognition.</p>
         <h1 class="sub">Importing MNIST</h1>
-        <img src="p4_1.PNG">
+        <img src="p4_1.png">
         <p>First, we import MNIST from <code>torchvision.datasets</code>. You can find a lot of data sets there, though our focus now is on MNIST. Then we call an instance of <code>MNIST</code>. We set where we want our data to be saved by setting <code>root='data/'</code>. We set <code>download</code> to <code>True</code> so that we can download the data set. We also set <code>transform</code> to <code>ToTensor()</code> which will transform the image data to tensors, which we talked about in the first lesson which you can visit <a href="https://kukuquack.github.io/home/lesson1pytorch.html">here</a>. Data in Pytorch needs to be converted into tensors as it is what Pytorch uses. You can't use normal image files. There are also other types of transformations that can be applied (they can be joined together too).</p>
         <img src="p4_2.PNG">
         <p>After we have imported the data, we need to divide it into 2, the training set and the validation set. Here the validation set is of size 10000 and the training set is 60000. This is the data set (not including the test set) is comprised of 60000 images.</p>
