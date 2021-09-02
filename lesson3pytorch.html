@@ -55,6 +55,16 @@
         <p>We create an <code>ImageFolder</code> with the folder of the training data and apply a <code>ToTensor()</code> transformation, then we split the data into a training set and a validation set using <code>random_split()</code>. We then set the <code>batch_size</code> to some number, then we create a <code>DataLoader</code> for each partition.</p>
         <img src="p4_8.png">
         <p>We create an <code>ImageFolder</code> for the test folder, and apply the same transformation, then we create a <code>DataLoader</code>.</p>
+        <h1 class="sub">Data Augmentation/Normalization</h1>
+        <p>We decided to make this part separate from the code above so that you can grasp everything. Data augmentation is very important in deep learning. They are random transformations that get applied to the data randomly. This helps the model to be more generalized as it doesn't see the same images every epoch.</p>
+        <img src="p4_10.PNG">
+        <p>Here we are composing some transforms that will be applied to the training data using <code>tt.Compose</code>. There are a lot of transforms that you can get with Pytorch, here we have a few. You can search the internet for some that you might want to apply.</p>
+        <p>Data normalization is also plays a very important role. It keeps the input into a smaller range than before. It helps the model to converge quickly as the weights don't need to keep changing due to the difference in ranges. It also prevents the values from any channel from unfairly affecting the gradients while training because it has a bigger range of values than other channels. It isn't necessary however, but it will be required when the inputs have different ranges. Do keep that in mind!</p>
+        <p>We normalize the data by subtracting the mean and dividing by the standard deviation across each channel.</p>
+        <img src="https://i.imgur.com/LYxXBVg.png" width="500px">
+        <p>This is how we normalize the data:</p>
+        <img src="p4_9.PNG">
+        <p>First I define the mean and standard deviation that I want to use, then I compose a few transformations to be applied to the data (in this case I only changed the data to tensors), then I normalize the data using <code>stats</code>. We put an asterisk here so that we don't need to manually put each element of <code>stats</code> as an argument. We set <code>inplace</code> to <code>True</code> so that we change the input directly rather than making copies of the data which saves memory.</p>
         <h1 class="sub">Conclusion</h1>
         <p>So we were able to import data from our computer using Pytorch. In the next lessons we will use this data to train a model on it. See you next lesson!</p>
     </div>
