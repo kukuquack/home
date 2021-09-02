@@ -1,0 +1,51 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" sizes="180x180" href="android-chrome-512x512.png">
+
+    <title>Making Single Predictions and Saving the Model: Pytorch Lesson 7</title>
+    <style>
+        #title {
+            text-align: center;
+            font-size: 64px;
+        }
+        body {
+            font-family: Calibri;
+        }
+        #text {
+            font-size: 200%;
+            width: 95%;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .sub {
+            font-size: 40px; 
+            text-align:left;
+        }
+    </style>
+</head>
+<body>
+    <h1><a href="https://kukuquack.github.io/home/" style="text-decoration: none; color: black;">Omar Zayed | Deep Learning</a></h1>
+    <h1 id="title">Making Single Predictions and Saving the Model: Pytorch Lesson 7</h1>
+    <em><p style="text-align: center;">2 Sep, 2021</p></em>
+    <div id="text">
+        <p>We now have a trained model. If your model performs well, we need to try it on samples because what is the use of a model that you won't use?</p>
+        <h1 class="sub">Single Predictions</h1>
+        <p>Models in Pytorch accept a batch of images at once, not single images, so we'll need to take an image and convert it into a batch of one image using the <code>unsqueeze()</code> function. Now that we have our batch, We make the predictions, then we call the <code>torch.max()</code> function. We call this function on the output and store the index in a variable called preds. We set dim to 1 because we want the maximum value in each prediction made for an image. Because we have one image, <code>preds</code> is a one-dimensional tensor that consists of one element. We take that element and convert it into an integer using <code>.item()</code> then see what class does that index correspond to.</p>
+        <img src="p8_1.PNG">
+        <p>Now we can call the function on an image in the test dataset.</p>
+        <img src="p8_2.PNG">
+        <h1 class="sub">Saving the Model</h1>
+        <img src="p8_3.PNG">
+        <p>Saving is pretty simple! All you do is call <code>torch.save()</code> on the model's parameters which you can get by calling <code>model.state_dict()</code> and giving the file a name.</p>
+        <h1 class="sub">Loading the Model to Use After Saving</h1>
+        <img src="p8_4.PNG">
+        <p>To load a Pytorch model, you first need an architecture that is the same as the model you saved, then you call <code>torch.load()</code> on the file path then call the <code>.load_state_dict()</code> method of the model to load the parameters to the new model. Don't forget to call <code>.eval()</code> to start inference.</p>
+        <h1 class="sub">Conclusion</h1>
+        <p>So that's it! We were able to make a model and train it and test it! WOOHOO! This was the end of the course. If you liked it, please do tell me! Thanks!</p>
+    </div>
+</body>
+</html> 
