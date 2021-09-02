@@ -65,6 +65,7 @@
         <p>This is how we normalize the data:</p>
         <img src="p4_9.PNG">
         <p>First I define the mean and standard deviation that I want to use, then I compose a few transformations to be applied to the data (in this case I only changed the data to tensors), then I normalize the data using <code>stats</code>. We put an asterisk here so that we don't need to manually put each element of <code>stats</code> as an argument. We set <code>inplace</code> to <code>True</code> so that we change the input directly rather than making copies of the data which saves memory.</p>
+        <p>Note: Data augmentation is only applied to training data, not the testing data as the main point in data augmentation is to make the model more generalized. Data normalization however needs to be applied on boths sets.</p>
         <h1 class="sub">Conclusion</h1>
         <p>So we were able to import data from our computer using Pytorch. In the next lessons we will use this data to train a model on it. See you next lesson!</p>
     </div>
